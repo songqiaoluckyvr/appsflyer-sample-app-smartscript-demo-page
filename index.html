@@ -32,31 +32,7 @@
       </div>
     </div>
     <h1 class="primary-heading">OneLink Smart Script V2</h1>
-    <h2 class="secondary-heading">OneLink parameters Demo</h2>
-    <div class="url-container">
-      <div class="input_url-container">
-        <h2>Input URL</h2>
-        <textarea id="input_url" class="present_url">
-        No input URL
-      </textarea
-        >
-      </div>
-      <div>
-        <input
-          type="button"
-          value="Run Code"
-          class="code_button"
-          onclick="generatePlatformURLS()"
-        />
-      </div>
-      <div class="output_url-container">
-        <h2>Output URL</h2>
-        <textarea id="output_url" class="present_url">
-        No output from script
-      </textarea
-        >
-      </div>
-    </div>
+    <h2 class="secondary-heading">Game Stores Banners</h2>
     <div class="stores-wrapper">
       <a
         id="ios_link"
@@ -95,9 +71,39 @@
       </a>
 
       <a id="playstation_link" class="store-image" href="#">
-        <img src="images/PS4_logo.png" alt="play store link" />
+        <img src="images/PlayStation_Store.png" alt="play store link" />
+      </a>
+
+      <a id="xbox_link" class="store-image" href="#">
+        <img src="images/xbox-game-store-logo.png" alt="play store link" />
       </a>
     </div>
+    <div class="url-container">
+      <div class="input_url-container">
+        <h2>Input URL</h2>
+        <textarea id="input_url" class="present_url">
+          No input URL
+        </textarea>
+        <input
+          type="button"
+          value="Generate Links"
+          class="code_button"
+          onclick="generatePlatformURLS()"
+        />
+      </div>
+      <div class="output_url-container">
+        <h2>Output URLs</h2>
+        <input
+          type="button"
+          value="Fire Impression"
+          class="code_button"
+          onclick="fireImpression()"
+        />
+        <div id="output_url"></div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS -->
     <script
       type="text/javascript"
       src="https://onelinksmartscript.appsflyer.com/onelink-smart-script-latest.js"
@@ -188,6 +194,7 @@
       generatePlatformURLS();
 
       function generatePlatformURLS() {
+        document.getElementById("output_url").innerHTML = "";
         for (const platformKey in platforms) {
           let result_url = "No output from script";
           console.log(platformKey);
@@ -215,12 +222,20 @@
               .getElementById(platformKey + "_link")
               .setAttribute("href", result_url);
 
+            document.getElementById(
+              "output_url"
+            ).innerHTML += `<b>${platformKey}</b> -> ${result_url} <br/><br/>`;
             // setTimeout(() => {
             //   window.AF_SMART_SCRIPT.fireImpressionsLink();
             // }, 3000);
           }
-          document.getElementById("output_url").innerHTML = result_url;
         }
+      }
+
+      function fireImpression() {
+        setTimeout(() => {
+          window.AF_SMART_SCRIPT.fireImpressionsLink();
+        }, 3000);
       }
     </script>
   </body>
