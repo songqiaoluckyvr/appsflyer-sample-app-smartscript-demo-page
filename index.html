@@ -35,32 +35,40 @@
       event
     </h2>
     <div class="stores-wrapper">
+      <a id="ios_link" class="store-image" href="#">
+        <img src="images/ios.svg" alt="apple store link" />
+      </a>
+
+      <a id="android_link" class="store-image" href="#">
+        <img src="images/android.svg" alt="play store link" />
+      </a>
+
       <a id="steam_link" class="store-image" href="#">
-        <img src="images/STEAM_logo.png" alt="play store link" />
+        <img src="images/STEAM_logo.png" alt="steam store link" />
       </a>
 
       <a id="epic_link" class="store-image" href="#">
-        <img src="images/epic.png" alt="play store link" />
+        <img src="images/epic.png" alt="epic store link" />
       </a>
 
       <a id="quest_link" class="store-image" href="#">
-        <img src="images/meta.png" alt="play store link" />
+        <img src="images/meta.png" alt="meta quest store link" />
       </a>
 
       <!-- <a id="microsoft_link" class="store-image" href="#">
-        <img src="images/microsoft.jpg" alt="play store link" />
+        <img src="images/microsoft.jpg" alt="microsoft store link" />
       </a> -->
 
       <a id="nintendo_link" class="store-image" href="#">
-        <img src="images/NintendoSwitch_logo.png" alt="play store link" />
+        <img src="images/NintendoSwitch_logo.png" alt="nintendo store link" />
       </a>
 
       <!-- <a id="playstation_link" class="store-image" href="#">
-        <img src="images/PlayStation_Store.png" alt="play store link" />
+        <img src="images/PlayStation_Store.png" alt="ps store link" />
       </a> -->
 
       <a id="xbox_link" class="store-image" href="#">
-        <img src="images/xbox-game-store-logo.png" alt="play store link" />
+        <img src="images/xbox-game-store-logo.png" alt="xbox store link" />
       </a>
     </div>
     <div class="url-container">
@@ -121,7 +129,9 @@ var OL_result = window.AF_SMART_SCRIPT.generateOneLinkURL({
 
 var OL_result_url = "No output from script"
 if (OL_result) {
-        OL_result_url = OL_result.clickURL;            
+        OL_result_url = OL_result.clickURL;      
+        document.getElementById('android_link').setAttribute('href', OL_result_url);
+        document.getElementById('ios_link').setAttribute('href', OL_result_url);
         // The following command will fire the impression.
         // The impression will fire to https://impressions.onelink.me//....
         // The wait is a temporary bug fix
@@ -142,8 +152,8 @@ var platforms = {
   },
   epic: {
     platformName: "epic",
-    appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
-    redirectURL: "https%3A%2F%2Fstore.epicgames.com%2Fen-US%2Fcollection%2Fmost-popular", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+    appid: "butterflyer", // <--- DON'T FORGET TO USE YOUR OWN appid
+    redirectURL: "https%3A%2F%2Fstore.epicgames.com%2Fen-US%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
   },
   quest: {
     platformName: "quest",
@@ -153,7 +163,7 @@ var platforms = {
   nintendo: {
     platformName: "nintendo",
     appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
-    redirectURL: "https%3A%2F%2Fwww.nintendo.com%2Fstore%2Fgames%2Fnintendo-switch-games%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+    redirectURL: "https%3A%2F%2Fwww.nintendo.com%2Fstore%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
   },
   xbox: {
     platformName: "xbox",
@@ -173,8 +183,7 @@ for (const platformKey in platforms) {
     afParameters: {
       mediaSource: mediaSource,
       channel: channel,
-      campaign: campaign,
-      afSub2: afSub2
+      campaign: campaign
     },
     platform: platform.platformName,
     app_id: platform.appid,
