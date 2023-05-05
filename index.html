@@ -4,9 +4,6 @@
     <base herf="/" />
     <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="themes/prism.css" />
-    <link rel="stylesheet" href="themes/prism-line-numbers.css" />
-    <link rel="stylesheet" href="themes/prism-live.css" />
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script
       async
@@ -96,10 +93,12 @@
       <h2 class="secondary-heading">
         Code to implement on your landing page (after the page is loaded)
       </h2>
-      <div>
-        <pre>
-            <textarea id="input_code_for_run" class="prism-live line-numbers language-js fill" spellcheck="false">
-//Initializing Smart Script arguments
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="./scripts/onelink-smart-script-v2.5.1-fix-platforms.js"></script>
+    <script>
+      //Initializing Smart Script arguments
 // TODO: change to your onelink template URL
 var oneLinkURL = "https://crossqa.onelink.me/WyIl";
 // If a media source key is NOT FOUND on the link and NO default value is found, the script will return a null string
@@ -127,21 +126,6 @@ var OL_result = window.AF_SMART_SCRIPT.generateOneLinkURL({
     
 })
 
-var OL_result_url = "No output from script"
-if (OL_result) {
-        OL_result_url = OL_result.clickURL;      
-        document.getElementById('android_link').setAttribute('href', OL_result_url);
-        document.getElementById('ios_link').setAttribute('href', OL_result_url);
-        // The following command will fire the impression.
-        // The impression will fire to https://impressions.onelink.me//....
-        // The wait is a temporary bug fix
-        setTimeout(() => {
-            window.AF_SMART_SCRIPT.fireImpressionsLink();
-            console.log("Impression fired"); 
-        }, 1000);            
-}      
-document.getElementById('output_url').innerHTML = OL_result_url;
-
 // TODO: update the appid and redirectURL for each platform
 var platforms = {
   steam: {
@@ -161,7 +145,7 @@ var platforms = {
     redirectURL: "https%3A%2F%2Fwww.oculus.com%2Fexperiences%2Fquest%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
   },
   nintendo: {
-    platformName: "nintendo",
+    platformName: "switch",
     appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
     redirectURL: "https%3A%2F%2Fwww.nintendo.com%2Fstore%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
   },
@@ -169,10 +153,18 @@ var platforms = {
     platformName: "xbox",
     appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
     redirectURL: "https%3A%2F%2Fwww.xbox.com%2Fen-US%2Fmicrosoft-store", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+  },
+  android: {
+    platformName: "android",
+    appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
+    redirectURL: "https%3A%2F%2Fwww.xbox.com%2Fen-US%2Fmicrosoft-store", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+  },
+  ios: {
+    platformName: "ios",
+    appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
+    redirectURL: "dont_care", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
   }
 };
-
-document.getElementById("output_url").innerHTML = "";
 
 // iterating the platforms object 
 for (const platformKey in platforms) {
@@ -203,46 +195,12 @@ for (const platformKey in platforms) {
       "output_url"
     ).innerHTML += `<b>${platformKey}</b> -> ${result_url} <br/><br/>`;
   }
-}    
-            </textarea>
-        </pre>
-        <input
-          type="button"
-          value="Run Code"
-          class="code_button"
-          onclick="runTxtAreaCode()"
-        />
-      </div>
-    </div>
-
-    <!-- SCRIPTS -->
-    <script
-      type="text/javascript"
-      src="https://onelinksmartscript.appsflyer.com/onelink-smart-script-latest.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="scripts/onelink-smart-script-latest.js"
-    ></script>
-    <script src="scripts/prism.js"></script>
-    <script src="scripts/prism-line-numbers.js"></script>
-    <script src="scripts/prism-live.js"></script>
-    <script>
-      runTxtAreaCode();
-
-      // set the onClicke to run the code in the code editor
-      function runTxtAreaCode() {
-        var headID = document.getElementsByTagName("head")[0];
-        var newScript = document.createElement("script");
-        newScript.type = "text/javascript";
-        newScript.text = document.getElementById("input_code_for_run").value;
-        headID.appendChild(newScript);
+}
         // Send Google Analytics - Run Script Successful
         gtag("event", "RunScript", {
           event_category: "SmartScriptImpressions",
           event_label: "Success",
         });
-      }
     </script>
   </body>
 </html>
