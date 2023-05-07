@@ -33,23 +33,23 @@
     </h2>
     <div class="stores-wrapper">
       <a id="ios_link" class="store-image" href="#">
-        <img src="images/ios.svg" alt="apple store link" />
+        <img src="images/store_icons/apple.png" alt="apple store link" />
       </a>
 
       <a id="android_link" class="store-image" href="#">
-        <img src="images/android.svg" alt="play store link" />
+        <img src="images/store_icons/android.png" alt="play store link" />
       </a>
 
       <a id="steam_link" class="store-image" href="#">
-        <img src="images/STEAM_logo.png" alt="steam store link" />
+        <img src="images/store_icons/steam.png" alt="steam store link" />
       </a>
 
       <a id="epic_link" class="store-image" href="#">
-        <img src="images/epic.png" alt="epic store link" />
+        <img src="images/store_icons/epic.png" alt="epic store link" />
       </a>
 
       <a id="quest_link" class="store-image" href="#">
-        <img src="images/meta.png" alt="meta quest store link" />
+        <img src="images/store_icons/oculus.png" alt="meta quest store link" />
       </a>
 
       <!-- <a id="microsoft_link" class="store-image" href="#">
@@ -57,7 +57,7 @@
       </a> -->
 
       <a id="nintendo_link" class="store-image" href="#">
-        <img src="images/NintendoSwitch_logo.png" alt="nintendo store link" />
+        <img src="images/store_icons/switch.png" alt="nintendo store link" />
       </a>
 
       <!-- <a id="playstation_link" class="store-image" href="#">
@@ -65,7 +65,7 @@
       </a> -->
 
       <a id="xbox_link" class="store-image" href="#">
-        <img src="images/xbox-game-store-logo.png" alt="xbox store link" />
+        <img src="images/store_icons/xbox.png" alt="xbox store link" />
       </a>
     </div>
     <div class="url-container">
@@ -99,108 +99,116 @@
     <script src="./scripts/onelink-smart-script-v2.5.1-fix-platforms.js"></script>
     <script>
       //Initializing Smart Script arguments
-// TODO: change to your onelink template URL
-var oneLinkURL = "https://crossqa.onelink.me/WyIl";
-// If a media source key is NOT FOUND on the link and NO default value is found, the script will return a null string
+      // TODO: change to your onelink template URL
+      var oneLinkURL = "https://crossqa.onelink.me/WyIl";
+      // If a media source key is NOT FOUND on the link and NO default value is found, the script will return a null string
 
-var channel = { keys: ["inchnl"] };
-var mediaSource = {keys: ["utm_source"], defaultValue: "game_media_source"};
-var campaign = {keys: ["campaign_name", "utm_campaign"], defaultValue: "game_landing_page"};
-var ad = {keys: ["ad_name", "utm_content"], defaultValue: "game_ad_name"};
-var adset = {keys: ["adset_name"], defaultValue: "game_adset_name"};
+      var channel = { keys: ["inchnl"] };
+      var mediaSource = {
+        keys: ["utm_source"],
+        defaultValue: "game_media_source",
+      };
+      var campaign = {
+        keys: ["campaign_name", "utm_campaign"],
+        defaultValue: "game_landing_page",
+      };
+      var ad = {
+        keys: ["ad_name", "utm_content"],
+        defaultValue: "game_ad_name",
+      };
+      var adset = { keys: ["adset_name"], defaultValue: "game_adset_name" };
 
-//Calling the function after embedding the code will be through a global parameter on the window object called window.AF_SMART_SCRIPT
-//Onelink URL is generated
-var OL_result = window.AF_SMART_SCRIPT.generateOneLinkURL({
-    oneLinkURL,
-    afParameters:{
-    mediaSource: mediaSource,
-    campaign: campaign,
-    ad: ad,
-    adSet: adset,
-    afCustom: [
-        // The following param is mandatory for cross-platform:  
-        {paramKey: "af_xplatform", keys: [], defaultValue: "true"} 
-        ] 
-    }
-    
-})
+      //Calling the function after embedding the code will be through a global parameter on the window object called window.AF_SMART_SCRIPT
+      //Onelink URL is generated
+      var OL_result = window.AF_SMART_SCRIPT.generateOneLinkURL({
+        oneLinkURL,
+        afParameters: {
+          mediaSource: mediaSource,
+          campaign: campaign,
+          ad: ad,
+          adSet: adset,
+          afCustom: [
+            // The following param is mandatory for cross-platform:
+            { paramKey: "af_xplatform", keys: [], defaultValue: "true" },
+          ],
+        },
+      });
 
-// TODO: update the appid and redirectURL for each platform
-var platforms = {
-  steam: {
-    platformName: "steam",  
-    appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
-    redirectURL:
-      "https%3A%2F%2Fstore.steampowered.com%2Fapp%2F1176160%2FSpace_Wars%2F", // <--- DON'T FORGET TO USE YOUR OWN redirect URL (Encoded!)
-  },
-  epic: {
-    platformName: "epic",
-    appid: "butterflyer", // <--- DON'T FORGET TO USE YOUR OWN appid
-    redirectURL: "https%3A%2F%2Fstore.epicgames.com%2Fen-US%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
-  },
-  quest: {
-    platformName: "quest",
-    appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
-    redirectURL: "https%3A%2F%2Fwww.oculus.com%2Fexperiences%2Fquest%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
-  },
-  nintendo: {
-    platformName: "switch",
-    appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
-    redirectURL: "https%3A%2F%2Fwww.nintendo.com%2Fstore%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
-  },
-  xbox: {
-    platformName: "xbox",
-    appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
-    redirectURL: "https%3A%2F%2Fwww.xbox.com%2Fen-US%2Fmicrosoft-store", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
-  },
-  android: {
-    platformName: "android",
-    appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
-    redirectURL: "https%3A%2F%2Fwww.xbox.com%2Fen-US%2Fmicrosoft-store", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
-  },
-  ios: {
-    platformName: "ios",
-    appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
-    redirectURL: "dont_care", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
-  }
-};
+      // TODO: update the appid and redirectURL for each platform
+      var platforms = {
+        steam: {
+          platformName: "steam",
+          appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
+          redirectURL:
+            "https%3A%2F%2Fstore.steampowered.com%2Fapp%2F1176160%2FSpace_Wars%2F", // <--- DON'T FORGET TO USE YOUR OWN redirect URL (Encoded!)
+        },
+        epic: {
+          platformName: "epic",
+          appid: "butterflyer", // <--- DON'T FORGET TO USE YOUR OWN appid
+          redirectURL: "https%3A%2F%2Fstore.epicgames.com%2Fen-US%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+        },
+        quest: {
+          platformName: "quest",
+          appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
+          redirectURL: "https%3A%2F%2Fwww.oculus.com%2Fexperiences%2Fquest%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+        },
+        nintendo: {
+          platformName: "switch",
+          appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
+          redirectURL: "https%3A%2F%2Fwww.nintendo.com%2Fstore%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+        },
+        xbox: {
+          platformName: "xbox",
+          appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
+          redirectURL: "https%3A%2F%2Fwww.xbox.com%2Fen-US%2Fmicrosoft-store", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+        },
+        android: {
+          platformName: "android",
+          appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
+          redirectURL: "https%3A%2F%2Fwww.xbox.com%2Fen-US%2Fmicrosoft-store", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+        },
+        ios: {
+          platformName: "ios",
+          appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
+          redirectURL: "dont_care", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+        },
+      };
 
-// iterating the platforms object 
-for (const platformKey in platforms) {
-  let result_url = "No output from script";
-  const platform = platforms[platformKey];
-  // generating direct click URL for the platform
-  const result = window.AF_SMART_SCRIPT.generateDirectClickURL({
-    afParameters: {
-      mediaSource: mediaSource,
-      channel: channel,
-      campaign: campaign
-    },
-    platform: platform.platformName,
-    app_id: platform.appid,
-    redirectURL: platform.redirectURL,
-  });
-
-  if (result) {
-    result_url = result.clickURL;
-    // update the href attribute for each store banner
-    if (document.getElementById(platformKey + "_link"))
-      document
-        .getElementById(platformKey + "_link")
-        .setAttribute("href", result_url);
-
-    // add the url to the output list of links
-    document.getElementById(
-      "output_url"
-    ).innerHTML += `<b>${platformKey}</b> -> ${result_url} <br/><br/>`;
-  }
-}
-        // Send Google Analytics - Run Script Successful
-        gtag("event", "RunScript", {
-          event_category: "SmartScriptImpressions",
-          event_label: "Success",
+      // iterating the platforms object
+      for (const platformKey in platforms) {
+        let result_url = "No output from script";
+        const platform = platforms[platformKey];
+        // generating direct click URL for the platform
+        const result = window.AF_SMART_SCRIPT.generateDirectClickURL({
+          afParameters: {
+            mediaSource: mediaSource,
+            channel: channel,
+            campaign: campaign,
+          },
+          platform: platform.platformName,
+          app_id: platform.appid,
+          redirectURL: platform.redirectURL,
         });
+
+        if (result) {
+          result_url = result.clickURL;
+          // update the href attribute for each store banner
+          if (document.getElementById(platformKey + "_link"))
+            document
+              .getElementById(platformKey + "_link")
+              .setAttribute("href", result_url);
+
+          // add the url to the output list of links
+          document.getElementById(
+            "output_url"
+          ).innerHTML += `<b>${platformKey}</b> -> ${result_url} <br/><br/>`;
+        }
+      }
+      // Send Google Analytics - Run Script Successful
+      gtag("event", "RunScript", {
+        event_category: "SmartScriptImpressions",
+        event_label: "Success",
+      });
     </script>
   </body>
 </html>

@@ -57,8 +57,9 @@ h2 {
 .stores-wrapper {
   display: flex;
   text-align: center;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: row;
 }
 
 .store-image {
@@ -66,10 +67,10 @@ h2 {
 }
 
 .store-image img {
-  height: 80px;
-  border-radius: 15px;
-  padding: 15px;
-  border: 1px solid gray;
+  height: 7rem;
+  /* border-radius: 15px; */
+  padding: 10px;
+  /* border: 1px solid gray; */
 }
 
 .present_url {
