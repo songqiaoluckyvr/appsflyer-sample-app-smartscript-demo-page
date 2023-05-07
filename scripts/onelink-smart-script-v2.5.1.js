@@ -1,8 +1,8 @@
 /**
- * AF Smart Script (Build 2.4.0)
+ * AF Smart Script (Build 2.5.1)
  */
 
-function ownKeys(object, enumerableOnly) {
+ function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
 
   if (Object.getOwnPropertySymbols) {
@@ -51,6 +51,65 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+
+  if (_i == null) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+
+  var _s, _e;
+
+  try {
+    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 var AF_URL_SCHEME = '(https:\\/\\/)(([^\\.]+).)(.*\\/)(.*)';
@@ -150,20 +209,6 @@ var getParameterValue = function getParameterValue(currentURLParams) {
   return defaultValue;
 };
 
-var getURLParametersKV = function getURLParametersKV(urlSearch) {
-  var currentURLParams = urlSearch.replace('?', '').split('&').reduce(function (curr, param) {
-    var kv = param.split('=');
-
-    if (!!kv[0] && !!kv[1]) {
-      curr[[kv[0]]] = kv[1];
-    }
-
-    return curr;
-  }, {});
-  console.debug('Generated current parameters object', currentURLParams);
-  return currentURLParams;
-};
-
 var isIOS = function isIOS(useragent) {
   return /iphone|ipad|ipod/i.test(useragent && useragent.toLowerCase());
 };
@@ -172,10 +217,80 @@ var isUACHSupported = function isUACHSupported() {
   return (typeof navigator === "undefined" ? "undefined" : _typeof(navigator)) === 'object' && 'userAgentData' in navigator && 'getHighEntropyValues' in navigator.userAgentData && !isIOS(navigator && navigator.userAgent);
 };
 
-var isOneLinkURLValid = function isOneLinkURLValid(oneLinkURL) {
-  var _ref;
+var getQueryParamsAndSaveToLocalStorage = function getQueryParamsAndSaveToLocalStorage(websiteUrl) {
+  if (!websiteUrl) {
+    console.debug("website doesnt exist + ".concat(websiteUrl));
+  }
 
-  var oneLinkURLParts = (_ref = oneLinkURL || '') === null || _ref === void 0 ? void 0 : _ref.toString().match(AF_URL_SCHEME);
+  try {
+    var url = new URL(websiteUrl);
+    var urlParams = new URLSearchParams(url.search);
+    var queryParams = Array.from(urlParams).reduce(function (acc, _ref) {
+      var _ref2 = _slicedToArray(_ref, 2),
+          key = _ref2[0],
+          value = _ref2[1];
+
+      return _objectSpread2(_objectSpread2({}, acc), {}, _defineProperty({}, key, encodeURIComponent(value)));
+    }, {});
+    var savedQueryParams = JSON.parse(localStorage.getItem('ss_incoming_params') || '[]');
+    var now = new Date().getTime();
+    var twoHoursLater = now + 2 * 60 * 60 * 1000; // Add 2 hours in milliseconds(product request)
+
+    var dataToSave = _objectSpread2(_objectSpread2({}, queryParams), {}, {
+      af_ss_exp_at: twoHoursLater
+    });
+
+    savedQueryParams.unshift(dataToSave); // we used unshift becuse the order matter
+
+    localStorage.setItem('ss_incoming_params', JSON.stringify(savedQueryParams));
+  } catch (error) {
+    console.debug("url isnt valid + ".concat(error));
+  }
+};
+
+var removeExpiredLocalStorageItems = function removeExpiredLocalStorageItems() {
+  var currentTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Date.now();
+  var incomingParams = JSON.parse(localStorage.getItem('ss_incoming_params') || '[]');
+  localStorage.setItem('ss_incoming_params', JSON.stringify(incomingParams.filter(function (_ref3) {
+    var af_ss_exp_at = _ref3.af_ss_exp_at;
+    return af_ss_exp_at > currentTime;
+  })));
+};
+
+function aggregateValuesFromParameters() {
+  var parameters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var aggregateValues = [];
+  Object.values(parameters).forEach(function (value) {
+    if (value && value.keys && Array.isArray(value.keys)) {
+      value.keys.forEach(function (key) {
+        return aggregateValues.push(key);
+      });
+    }
+  });
+  return aggregateValues;
+}
+
+function getCurrentURLParams(aggregateValues) {
+  var currentURLParams = {};
+
+  if (Object.keys(localStorage).includes('ss_incoming_params')) {
+    var incomingParamsFromSS = JSON.parse(localStorage['ss_incoming_params']);
+    currentURLParams = incomingParamsFromSS.find(function (obj) {
+      return aggregateValues.some(function (key) {
+        return key in obj;
+      });
+    }) || {};
+  } else {
+    console.log("Key 'ss_incoming_params' not found in localStorage.");
+  }
+
+  return currentURLParams;
+}
+
+var isOneLinkURLValid = function isOneLinkURLValid(oneLinkURL) {
+  var _ref4;
+
+  var oneLinkURLParts = (_ref4 = oneLinkURL || '') === null || _ref4 === void 0 ? void 0 : _ref4.toString().match(AF_URL_SCHEME);
 
   if (!oneLinkURLParts || (oneLinkURLParts === null || oneLinkURLParts === void 0 ? void 0 : oneLinkURLParts.length) < VALID_AF_URL_PARTS_LENGTH) {
     console.error("oneLinkURL is missing or not in the correct format, can't generate URL", oneLinkURL);
@@ -198,11 +313,11 @@ var validatedMs = function validatedMs() {
   return true;
 };
 
-var isSkipListsValid = function isSkipListsValid(_ref2) {
-  var _ref2$referrerSkipLis = _ref2.referrerSkipList,
-      referrerSkipList = _ref2$referrerSkipLis === void 0 ? [] : _ref2$referrerSkipLis,
-      _ref2$urlSkipList = _ref2.urlSkipList,
-      urlSkipList = _ref2$urlSkipList === void 0 ? [] : _ref2$urlSkipList;
+var isSkipListsValid = function isSkipListsValid(_ref5) {
+  var _ref5$referrerSkipLis = _ref5.referrerSkipList,
+      referrerSkipList = _ref5$referrerSkipLis === void 0 ? [] : _ref5$referrerSkipLis,
+      _ref5$urlSkipList = _ref5.urlSkipList,
+      urlSkipList = _ref5$urlSkipList === void 0 ? [] : _ref5$urlSkipList;
 
   if (isSkippedURL({
     url: document.referrer,
@@ -223,12 +338,12 @@ var isSkipListsValid = function isSkipListsValid(_ref2) {
   return true;
 };
 
-var extractCustomParams = function extractCustomParams(_ref3) {
-  var _ref3$afCustom = _ref3.afCustom,
-      afCustom = _ref3$afCustom === void 0 ? [] : _ref3$afCustom,
-      _ref3$currentURLParam = _ref3.currentURLParams,
-      currentURLParams = _ref3$currentURLParam === void 0 ? {} : _ref3$currentURLParam,
-      googleClickIdKey = _ref3.googleClickIdKey;
+var extractCustomParams = function extractCustomParams(_ref6) {
+  var _ref6$afCustom = _ref6.afCustom,
+      afCustom = _ref6$afCustom === void 0 ? [] : _ref6$afCustom,
+      _ref6$currentURLParam = _ref6.currentURLParams,
+      currentURLParams = _ref6$currentURLParam === void 0 ? {} : _ref6$currentURLParam,
+      googleClickIdKey = _ref6.googleClickIdKey;
   var afParams = {};
 
   if (Array.isArray(afCustom)) {
@@ -347,9 +462,9 @@ var isPlatformValid = function isPlatformValid(platform) {
     return false;
   }
 
-  var platforms = ['smartcast', 'tizen', 'roku', 'webos', 'vidaa', 'playstation', 'android', 'ios', 'steam', 'quest', 'battlenet', 'nintendo', 'epic', 'xbox'];
+  var platforms = ['smartcast', 'tizen', 'roku', 'webos', 'vidaa', 'playstation', 'android', 'ios', 'steam', 'quest', 'battlenet', 'epic', 'switch', 'xbox'];
 
-  if (!platforms.includes(platform)) {
+  if (!platforms.includes(platform.toLowerCase())) {
     console.error('platform need to be part of the known platforms supoorted');
     return false;
   }
@@ -379,19 +494,19 @@ var isPlatformValid = function isPlatformValid(platform) {
 function QRCode() {
 
   var undefined$1;
-  /** Node.js global 检测. */
+  /** Node.js global æ£€æµ‹. */
 
   var freeGlobal = (typeof global === "undefined" ? "undefined" : _typeof(global)) == 'object' && global && global.Object === Object && global;
-  /** `self` 变量检测. */
+  /** `self` å˜é‡æ£€æµ‹. */
 
   var freeSelf = (typeof self === "undefined" ? "undefined" : _typeof(self)) == 'object' && self && self.Object === Object && self;
-  /** 全局对象检测. */
+  /** å…¨å±€å¯¹è±¡æ£€æµ‹. */
 
   var root = freeGlobal || freeSelf || Function('return this')();
-  /** `exports` 变量检测. */
+  /** `exports` å˜é‡æ£€æµ‹. */
 
   var freeExports = (typeof exports === "undefined" ? "undefined" : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
-  /** `module` 变量检测. */
+  /** `module` å˜é‡æ£€æµ‹. */
 
   var freeModule = freeExports && (typeof module === "undefined" ? "undefined" : _typeof(module)) == 'object' && module && !module.nodeType && module;
   var _QRCode = root.QRCode;
@@ -2335,11 +2450,13 @@ function QRCode() {
   }
 }
 
-var version = "2.4.0";
+var version = "2.5.1";
 
 var formatVersion = version.replace(/\./g, '_'); //replace . with _
 
 QRCode();
+removeExpiredLocalStorageItems();
+getQueryParamsAndSaveToLocalStorage(window.location.href);
 
 function getUserAgentData() {
   return new Promise(function (resolve) {
@@ -2377,7 +2494,8 @@ function getUserAgentData() {
       urlSkipList: urlSkipList
     })) return null;
     if (!validatedMs(mediaSource)) return null;
-    var currentURLParams = getURLParametersKV(window.location.search);
+    var aggregateValues = aggregateValuesFromParameters(parameters.afParameters);
+    var currentURLParams = getCurrentURLParams(aggregateValues);
     var validParams = validateAndMappedParams(parameters.afParameters, currentURLParams);
     if (!validParams) return null;
 
@@ -2482,7 +2600,8 @@ function getUserAgentData() {
       return null;
     }
 
-    if (!isPlatformValid(platform)) return null;
+    var lowerCasePlatform = platform === null || platform === void 0 ? void 0 : platform.toLowerCase();
+    if (!isPlatformValid(lowerCasePlatform)) return null;
 
     if (typeof app_id !== 'string') {
       console.error('app_id must be a string');
@@ -2499,7 +2618,8 @@ function getUserAgentData() {
       urlSkipList: urlSkipList
     })) return null;
     if (!validatedMs(mediaSource)) return null;
-    var currentURLParams = getURLParametersKV(window.location.search);
+    var aggregateValues = aggregateValuesFromParameters(parameters.afParameters);
+    var currentURLParams = getCurrentURLParams(aggregateValues);
     var validParams = validateAndMappedParams(parameters.afParameters, currentURLParams, true);
     if (!validParams) return null;
 
@@ -2509,8 +2629,18 @@ function getUserAgentData() {
     }, validParams);
 
     var finalParams = stringifyParameters(afParams).replace('&', '?');
-    var clickBaseUrl = 'https://engagements.appsflyer.com/v1.0/c2s/click/app';
-    var finalURL = "".concat(clickBaseUrl, "/").concat(platform, "/").concat(app_id).concat(finalParams, "&af_r=").concat(encodeURIComponent(redirectURL));
+    var clickBaseUrl = "https://engagements.appsflyer.com/v1.0/c2s/click/app/".concat(lowerCasePlatform);
+
+    if (['ios', 'android'].includes(lowerCasePlatform)) {
+      clickBaseUrl = 'https://app.appsflyer.com';
+    }
+
+    var finalURL = "".concat(clickBaseUrl, "/").concat(app_id).concat(finalParams, "&af_r=").concat(encodeURIComponent(redirectURL));
+
+    if (['ios', 'android'].includes(lowerCasePlatform)) {
+      finalURL = finalURL.replace('af_media_source', 'pid').replace('af_campaign', 'c').replace('af_campaign_id', 'af_c_id');
+    }
+
     console.debug('generate Direct Click URL', finalURL);
     delete window.AF_SMART_SCRIPT.displayQrCode;
     delete window.AF_SMART_SCRIPT.fireImpressionsLink;
