@@ -21,77 +21,82 @@
   </head>
 
   <body>
-    <div class="row">
+    <nav class="header">
       <div class="column">
         <img src="images/appsflyerlogo.png" alt="AppsFlyer logo" />
       </div>
-    </div>
-    <h1 class="primary-heading">Game Landing Page Demo w/ Smart Script V2</h1>
-    <h2 class="secondary-heading">
-      Click on one of the store buttons below in order to fire AppsFlyer click
-      event
-    </h2>
-    <div class="stores-wrapper">
-      <a id="ios_link" class="store-image" href="#">
-        <img src="images/store_icons/apple.png" alt="apple store link" />
-      </a>
+    </nav>
+    <div class="content-container">
+      <h1 class="primary-heading">Game Landing Page Demo</h1>
+      <h2 class="primary-heading">w/ Smart Script V2</h2>
+      <h3 class="secondary-heading">
+        Click on one of the store buttons below in order to fire AppsFlyer click
+        event
+      </h3>
+      <div class="stores-wrapper">
+        <a id="ios_link" class="store-image" href="#">
+          <img src="images/store_icons/apple.png" alt="apple store link" />
+        </a>
 
-      <a id="android_link" class="store-image" href="#">
-        <img src="images/store_icons/android.png" alt="play store link" />
-      </a>
+        <a id="android_link" class="store-image" href="#">
+          <img src="images/store_icons/android.png" alt="play store link" />
+        </a>
 
-      <a id="steam_link" class="store-image" href="#">
-        <img src="images/store_icons/steam.png" alt="steam store link" />
-      </a>
+        <a id="steam_link" class="store-image" href="#">
+          <img src="images/store_icons/steam.png" alt="steam store link" />
+        </a>
 
-      <a id="epic_link" class="store-image" href="#">
-        <img src="images/store_icons/epic.png" alt="epic store link" />
-      </a>
+        <a id="epic_link" class="store-image" href="#">
+          <img src="images/store_icons/epic.png" alt="epic store link" />
+        </a>
 
-      <a id="quest_link" class="store-image" href="#">
-        <img src="images/store_icons/oculus.png" alt="meta quest store link" />
-      </a>
+        <a id="quest_link" class="store-image" href="#">
+          <img
+            src="images/store_icons/oculus.png"
+            alt="meta quest store link"
+          />
+        </a>
 
-      <!-- <a id="microsoft_link" class="store-image" href="#">
+        <!-- <a id="microsoft_link" class="store-image" href="#">
         <img src="images/microsoft.jpg" alt="microsoft store link" />
       </a> -->
 
-      <a id="nintendo_link" class="store-image" href="#">
-        <img src="images/store_icons/switch.png" alt="nintendo store link" />
-      </a>
+        <a id="nintendo_link" class="store-image" href="#">
+          <img src="images/store_icons/switch.png" alt="nintendo store link" />
+        </a>
 
-      <!-- <a id="playstation_link" class="store-image" href="#">
+        <!-- <a id="playstation_link" class="store-image" href="#">
         <img src="images/PlayStation_Store.png" alt="ps store link" />
       </a> -->
 
-      <a id="xbox_link" class="store-image" href="#">
-        <img src="images/store_icons/xbox.png" alt="xbox store link" />
-      </a>
-    </div>
-    <div class="url-container">
-      <div class="output_url-container">
-        <h2>What happens when the page is loaded</h2>
-        <ol>
-          <li>
-            A OneLink URL is generated and then an impression event is fired.
-          </li>
-          <li>
-            URLs are generates for each platform using the
-            <code>AF_SMART_SCRIPT.generateDirectClickURL</code> function
-            according to the platform array, below are the generated links.
-            <br />
-            When the game store banners are clicked, these links will be fired
-            respectively. <br />
-            This will register a click in AppsFlyer system and then redirect
-            according to the <code>af_r</code> parameter (which is generated
-            from the <code>redirectURL</code> property within the platform
-            object.).
-          </li>
-        </ol>
-        <div id="output_url"></div>
+        <a id="xbox_link" class="store-image" href="#">
+          <img src="images/store_icons/xbox.png" alt="xbox store link" />
+        </a>
+      </div>
+      <div class="url-container">
+        <div class="output_url-container">
+          <h3>What happens when the page is loaded</h3>
+          <ol>
+            <li>
+              A OneLink URL is generated and then an impression event is fired.
+            </li>
+            <li>
+              URLs are generates for each platform using the
+              <code>AF_SMART_SCRIPT.generateDirectClickURL</code> function
+              according to the platform array, below are the generated links.
+              <br />
+              When the game store banners are clicked, these links will be fired
+              respectively. <br />
+              This will register a click in AppsFlyer system and then redirect
+              according to the <code>af_r</code> parameter (which is generated
+              from the <code>redirectURL</code> property within the platform
+              object.).
+            </li>
+          </ol>
+          <div id="output_url"></div>
+        </div>
       </div>
     </div>
-
     <!-- SCRIPTS -->
     <script src="./scripts/onelink-smart-script-v2.5.1-fix-platforms.js"></script>
     <script>
