@@ -1,8 +1,8 @@
 /**
- * AF Smart Script (Build 2.5.1-fix-platforms)
+ * AF Smart Script (Build 2.5.1)
  */
 
-function ownKeys(object, enumerableOnly) {
+ function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
 
   if (Object.getOwnPropertySymbols) {
@@ -464,7 +464,7 @@ var isPlatformValid = function isPlatformValid(platform) {
 
   var platforms = ['smartcast', 'tizen', 'roku', 'webos', 'vidaa', 'playstation', 'android', 'ios', 'steam', 'quest', 'battlenet', 'epic', 'switch', 'xbox'];
 
-  if (!platforms.includes(platform)) {
+  if (!platforms.includes(platform.toLowerCase())) {
     console.error('platform need to be part of the known platforms supoorted');
     return false;
   }
@@ -494,19 +494,19 @@ var isPlatformValid = function isPlatformValid(platform) {
 function QRCode() {
 
   var undefined$1;
-  /** Node.js global 检测. */
+  /** Node.js global æ£€æµ‹. */
 
   var freeGlobal = (typeof global === "undefined" ? "undefined" : _typeof(global)) == 'object' && global && global.Object === Object && global;
-  /** `self` 变量检测. */
+  /** `self` å˜é‡æ£€æµ‹. */
 
   var freeSelf = (typeof self === "undefined" ? "undefined" : _typeof(self)) == 'object' && self && self.Object === Object && self;
-  /** 全局对象检测. */
+  /** å…¨å±€å¯¹è±¡æ£€æµ‹. */
 
   var root = freeGlobal || freeSelf || Function('return this')();
-  /** `exports` 变量检测. */
+  /** `exports` å˜é‡æ£€æµ‹. */
 
   var freeExports = (typeof exports === "undefined" ? "undefined" : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
-  /** `module` 变量检测. */
+  /** `module` å˜é‡æ£€æµ‹. */
 
   var freeModule = freeExports && (typeof module === "undefined" ? "undefined" : _typeof(module)) == 'object' && module && !module.nodeType && module;
   var _QRCode = root.QRCode;
@@ -2450,7 +2450,7 @@ function QRCode() {
   }
 }
 
-var version = "2.5.1-fix-platforms";
+var version = "2.5.1";
 
 var formatVersion = version.replace(/\./g, '_'); //replace . with _
 
@@ -2600,7 +2600,8 @@ function getUserAgentData() {
       return null;
     }
 
-    if (!isPlatformValid(platform)) return null;
+    var lowerCasePlatform = platform === null || platform === void 0 ? void 0 : platform.toLowerCase();
+    if (!isPlatformValid(lowerCasePlatform)) return null;
 
     if (typeof app_id !== 'string') {
       console.error('app_id must be a string');
@@ -2628,15 +2629,15 @@ function getUserAgentData() {
     }, validParams);
 
     var finalParams = stringifyParameters(afParams).replace('&', '?');
-    var clickBaseUrl = "https://engagements.appsflyer.com/v1.0/c2s/click/app/".concat(platform);
+    var clickBaseUrl = "https://engagements.appsflyer.com/v1.0/c2s/click/app/".concat(lowerCasePlatform);
 
-    if (platform === 'ios' || platform === 'android') {
+    if (['ios', 'android'].includes(lowerCasePlatform)) {
       clickBaseUrl = 'https://app.appsflyer.com';
     }
 
     var finalURL = "".concat(clickBaseUrl, "/").concat(app_id).concat(finalParams, "&af_r=").concat(encodeURIComponent(redirectURL));
 
-    if (platform === 'ios' || platform === 'android') {
+    if (['ios', 'android'].includes(lowerCasePlatform)) {
       finalURL = finalURL.replace('af_media_source', 'pid').replace('af_campaign', 'c').replace('af_campaign_id', 'af_c_id');
     }
 
