@@ -53,15 +53,11 @@ h1 {
 
 h2 {
   font-style: normal;
-  font-weight: bold;
-  font-size: 2.25em;
   line-height: 40px;
   color: #00a0e0;
 }
 
 h3 {
-  font-style: normal;
-  font-size: 1.5em;
   color: gray;
 }
 
@@ -107,7 +103,7 @@ h3 {
   border: 1px solid gray;
   border-radius: 15px;
   line-height: 1.3;
-  font-size: 1em;
+  font-size: 20px;
 }
 
 .url-container {
@@ -128,7 +124,7 @@ h3 {
 
 .output_url-container li {
   margin-bottom: 10px;
-  font-size: 1.1em;
+  font-size: 22px;
   line-height: 1.3;
 }
 
