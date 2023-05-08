@@ -68,9 +68,9 @@
             alt="Nintendo Switch store link"
           />
         </a>
-        <!-- <a id="playstation_link" class="store-image" href="#">
-          <img src="images/store_icons/psn.png" alt="ps store link" />
-        </a> -->
+        <a id="playstation_link" class="store-image" href="#">
+          <img src="images/store_icons/psn.png" alt="psn store link" />
+        </a>
         <a id="xbox_link" class="store-image" href="#">
           <img
             src="images/store_icons/xbox.png"
@@ -105,7 +105,7 @@
     <!-- SCRIPTS -->
     <script src="./scripts/onelink-smart-script-v2.5.1.js"></script>
     <script>
-      //Initializing Smart Script arguments
+      // Initializing Smart Script arguments
       // TODO: change to your onelink template URL
       var oneLinkURL = "https://gaming-demo-landing-page.onelink.me/AG7A";
       // If a media source key is NOT FOUND on the link and NO default value is found, the script will return a null string
@@ -125,8 +125,9 @@
       };
       var adset = { keys: ["adset_name"], defaultValue: "game_adset_name" };
 
-      //Calling the function after embedding the code will be through a global parameter on the window object called window.AF_SMART_SCRIPT
-      //Onelink URL is generated
+      // Calling the function after embedding the code will be through a global parameter on the window object called window.AF_SMART_SCRIPT
+      // Onelink URL is generated
+      // READ MORE: https://dev.appsflyer.com/hc/docs/dl_smart_script_v2
       var OL_result = window.AF_SMART_SCRIPT.generateOneLinkURL({
         oneLinkURL,
         afParameters: {
@@ -141,45 +142,59 @@
         },
       });
 
+      if (OL_result) {
+        // The following command will fire the impression.
+        // The impression will fire to https://impressions.onelink.me//....
+        // The wait is a temporary bug fix
+        setTimeout(() => {
+          window.AF_SMART_SCRIPT.fireImpressionsLink();
+          console.log("Impression fired");
+        }, 1000);
+      }
+
       // TODO: update the appid and redirectURL for each platform
       var platforms = {
         steam: {
           platformName: "steam",
           appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
-          redirectURL:
-            "https%3A%2F%2Fstore.steampowered.com%2Fapp%2F1176160%2FSpace_Wars%2F", // <--- DON'T FORGET TO USE YOUR OWN redirect URL (Encoded!)
+          redirectURL: "https://store.steampowered.com/app/1176160/Space_Wars/", // <--- DON'T FORGET TO USE YOUR OWN redirect URL (Encoded!)
         },
         epic: {
           platformName: "epic",
           appid: "butterflyer", // <--- DON'T FORGET TO USE YOUR OWN appid
-          redirectURL: "https%3A%2F%2Fstore.epicgames.com%2Fen-US%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+          redirectURL: "https://store.epicgames.com/en-US/", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
         },
         quest: {
           platformName: "quest",
           appid: "questtest", // <--- DON'T FORGET TO USE YOUR OWN appid
-          redirectURL: "https%3A%2F%2Fwww.oculus.com%2Fexperiences%2Fquest%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+          redirectURL: "https://www.oculus.com/experiences/quest/", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
         },
         nintendo: {
           platformName: "switch",
           appid: "12345123451234", // <--- DON'T FORGET TO USE YOUR OWN appid
-          redirectURL: "https%3A%2F%2Fwww.nintendo.com%2Fstore%2F", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+          redirectURL: "https://www.nintendo.com/store/", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
         },
         xbox: {
           platformName: "xbox",
           appid: "x1b2o3x4t5e6", // <--- DON'T FORGET TO USE YOUR OWN appid
-          redirectURL: "https%3A%2F%2Fwww.xbox.com%2Fen-US%2Fmicrosoft-store", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+          redirectURL: "https://www.xbox.com/en-US/microsoft-store", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+        },
+        playstation: {
+          platformName: "playstation",
+          appid: "psn-test", // <--- DON'T FORGET TO USE YOUR OWN appid
+          redirectURL: "https://store.playstation.com/en-il/pages/latest", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
         },
         android: {
           platformName: "android",
           appid: "com.appsflyer.onelinksimulator", // <--- DON'T FORGET TO USE YOUR OWN appid
           redirectURL:
-            "https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.appsflyer.onelinksimulator%26hl%3Den%26gl%3DUS", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+            "https://play.google.com/store/apps/details?id=com.appsflyer.onelinksimulator&hl=en&gl=US", // <--- redirect URL is irrelevant for iOS & Android
         },
         ios: {
           platformName: "ios",
-          appid: "1550796743", // <--- DON'T FORGET TO USE YOUR OWN appid
+          appid: "id1550796743", // <--- DON'T FORGET TO USE YOUR OWN appid
           redirectURL:
-            "https://apps.apple.com/us/app/onelink-simulator/id1550796743", // <--- DON'T FORGET TO USE YOUR OWN redirectURL (Encoded!)
+            "https://apps.apple.com/us/app/onelink-simulator/id1550796743", // <--- redirect URL is irrelevant for iOS & Android
         },
       };
 
@@ -188,6 +203,7 @@
         let result_url = "No output from script";
         const platform = platforms[platformKey];
         // generating direct click URL for the platform
+        // READ MORE: https://dev.appsflyer.com/hc/docs/create-direct-click-url
         const result = window.AF_SMART_SCRIPT.generateDirectClickURL({
           afParameters: {
             mediaSource: mediaSource,
