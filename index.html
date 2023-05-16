@@ -125,22 +125,27 @@
         defaultValue: "game_ad_name",
       };
       var adset = { keys: ["adset_name"], defaultValue: "game_adset_name" };
+      // extracting parameters for facebook click
+      var afSub2 = { keys: ["fbclid"] };
+
+      var afParameters = {
+        mediaSource: mediaSource,
+        campaign: campaign,
+        ad: ad,
+        adSet: adset,
+        afSub2: afSub2,
+        afCustom: [
+          // The following param is mandatory for cross-platform:
+          { paramKey: "af_xplatform", keys: [], defaultValue: "true" },
+        ],
+      };
 
       // Calling the function after embedding the code will be through a global parameter on the window object called window.AF_SMART_SCRIPT
       // Onelink URL is generated
       // READ MORE: https://dev.appsflyer.com/hc/docs/dl_smart_script_v2
       var OL_result = window.AF_SMART_SCRIPT.generateOneLinkURL({
         oneLinkURL,
-        afParameters: {
-          mediaSource: mediaSource,
-          campaign: campaign,
-          ad: ad,
-          adSet: adset,
-          afCustom: [
-            // The following param is mandatory for cross-platform:
-            { paramKey: "af_xplatform", keys: [], defaultValue: "true" },
-          ],
-        },
+        afParameters: afParameters,
       });
 
       if (OL_result) {
@@ -206,11 +211,7 @@
         // generating direct click URL for the platform
         // READ MORE: https://dev.appsflyer.com/hc/docs/create-direct-click-url
         const result = window.AF_SMART_SCRIPT.generateDirectClickURL({
-          afParameters: {
-            mediaSource: mediaSource,
-            channel: channel,
-            campaign: campaign,
-          },
+          afParameters: afParameters,
           platform: platform.platformName,
           app_id: platform.appid,
           redirectURL: platform.redirectURL,
