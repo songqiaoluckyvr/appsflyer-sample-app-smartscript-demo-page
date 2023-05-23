@@ -81,24 +81,46 @@
       </div>
       <div class="url-container">
         <div class="output_url-container">
-          <h3 class="my-4">What happens when the page is loaded</h3>
+          <h3 class="my-4">Implementation guidelines</h3>
+          <h4><b>Fire an impression</b></h4> 
+          <h4>The impression is created using the Smart Script.<br> 
+              In order to create an impression the Smart Script requires a OneLink template, with cross-platform attribution enabled.<br>
+              Firing an imperssion includes the following steps:</h4>
           <ol>
             <li>
-              A OneLink URL is generated and then an impression event is fired.
+              Initializing the Smart Script arguments. These arguments will carry the impression data, e.g. <code>media_source</code>, <code>campaign</code>, <code>ad_name</code> etc.<br>
+              The argument values are retrieved from the incoming URL query parameters (e.g. UTM parameters) or default values.<br>
+              Information regarding more Smart Script arguments can be found <a href="https://dev.appsflyer.com/hc/docs/dl_smart_script_v2#arguments">here</a>.
             </li>
             <li>
-              URLs are generates for each platform using the
-              <code>AF_SMART_SCRIPT.generateDirectClickURL</code> function
-              according to the platform array, below are the generated links.
-              <br />
-              When the game store banners are clicked, these links will be fired
-              respectively. <br />
-              This will register a click in AppsFlyer system and then redirect
-              according to the <code>af_r</code> parameter (which is generated
-              from the <code>redirectURL</code> property within the platform
-              object.).
+              Call the Smart Script method <code>generateOneLinkURL</code>. The method generates the infrastructure to fire an impression in the next step.<br>
+              Information regarding this method can be found <a href="https://dev.appsflyer.com/hc/docs/dl_smart_script_v2#manually-configure-the-script">here</a>.
+            </li>
+            <li>
+              Fire an impression - verify the method generateOneLinkURL was successful and call the method fireImpressionsLink to fire the impression.
             </li>
           </ol>
+          <h4><b>Create installation links</b></h4>
+          <h4>
+            In this section we will create platform-specific installation links, the link will route the user to the relevant store (e.g. Steam store).<br> 
+            For each redirection button in the page we will run the Smart-Script method <code>generateDirectClickURL</code>. If generation is successful, the created link will be placed as the link behind the button. <br>
+            The method <code>generateDirectClickURL</code> accepts the following arguments: 
+            <ul>
+              <li>
+                <code>afParameters</code>: these are the same attribution parameters we've collected to send with the impression in the previous section.
+              </li>
+              <li>
+                <code>platform</code>: The platform this link aims for, e.g. steam, epic, playstation etc.
+              </li>
+              <li>
+                <code>app_id</code>: The application ID in this platform
+              </li>
+              <li>
+                <code>redirectURL</code>: The URL the user will be redirected in order to install the game, e.g. the link in the steam store
+              </li>
+            </ul>
+          </h4>
+          <h4><b>Platform specific links created on this page:</b></h4>
           <div id="output_url"></div>
         </div>
       </div>
@@ -106,11 +128,27 @@
     <!-- SCRIPTS -->
     <script src="./scripts/onelink-smart-script-v2.5.1.js"></script>
     <script>
-      // Initializing Smart Script arguments
+
+      // @@@@ Section START - Fire an impression @@@@
+
+      // The impression is created using the Smart Script. 
+      // In order to create an impression the Smart Script requires a OneLink template, with cross-platform attribution enabled.
+      
+      // Firing an imperssion includes the following steps:
+      // 1. Initializing the Smart Script arguments. These arguments will carry the impression data, e.g. media_source, campaign, ad_name etc.
+      //    The argument values are retrieved from the incoming URL query parameters (e.g. UTM parameters) or default values.
+      //    Information regarding more Smart Script arguments can be found here https://dev.appsflyer.com/hc/docs/dl_smart_script_v2#arguments.
+      // 2. Call the Smart Script method generateOneLinkURL(). The method generates the infrastructure to fire an impression in the next step.
+      //    Information regarding this method can be found here https://dev.appsflyer.com/hc/docs/dl_smart_script_v2#manually-configure-the-script
+      // 3. Fire an impression - verify the method generateOneLinkURL was successful and call the method fireImpressionsLink() to fire the impression.
+
+      // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+      // ** Step 1 ** Initializing Smart Script arguments
       // TODO: change to your onelink template URL
       var oneLinkURL = "https://gaming-demo-landing-page.onelink.me/AG7A";
-      // If a media source key is NOT FOUND on the link and NO default value is found, the script will return a null string
 
+      // TODO: Define the mapping of incoming URL parameters to outgoing parameters (impression and install links) 
       var channel = { keys: ["inchnl"] };
       var mediaSource = {
         keys: ["utm_source"],
@@ -135,19 +173,21 @@
         adSet: adset,
         afSub2: afSub2,
         afCustom: [
-          // The following param is mandatory for cross-platform:
+          // !!! IMPORTANT !!! 
+          // The following param is mandatory for cross-platform impression. MUST BE ADDED
           { paramKey: "af_xplatform", keys: [], defaultValue: "true" },
         ],
       };
 
+      // ** Step 2 ** - Call the Smart Script method generateOneLinkURL(). The method generates the infrastructure to fire an impression in the next step 
       // Calling the function after embedding the code will be through a global parameter on the window object called window.AF_SMART_SCRIPT
-      // Onelink URL is generated
-      // READ MORE: https://dev.appsflyer.com/hc/docs/dl_smart_script_v2
       var OL_result = window.AF_SMART_SCRIPT.generateOneLinkURL({
         oneLinkURL,
         afParameters: afParameters,
       });
 
+      // ** Step 3 ** - Verify that the returned result from generateOneLinkURL() is not null. If verified, fire the impression.
+      // Read more https://dev.appsflyer.com/hc/docs/create-direct-click-url
       if (OL_result) {
         // The following command will fire the impression.
         // The impression will fire to https://impressions.onelink.me//....
@@ -157,6 +197,20 @@
           console.log("Impression fired");
         }, 1000);
       }
+      // @@@@ Section END - Fire an impression @@@@
+
+      // @@@@ Section START - Create installation links @@@@
+      // In this section we will create platform-specific installation links, the link will route the user to the relevant store (e.g. Steam store). 
+      
+      // For each redirection button in the page we will run the Smart-Script method generateDirectClickURL. If generation is successful, 
+      // the created link will be placed as the link behind the button. 
+      
+      // The method generateDirectClickURL accepts the following arguments: 
+      //  - afParameters: these are the same attribution parameters we've collected to send with the impression in the previous section.
+      //  - platform: The platform this link aims for, e.g. steam, epic, playstation etc.
+      //  - app_id: The application ID in this platform
+      //  - redirectURL: The URL the user will be redirected in order to install the game, e.g. the link in the steam store
+
 
       // TODO: update the appid and redirectURL for each platform
       var platforms = {
@@ -230,7 +284,8 @@
             "output_url"
           ).innerHTML += `<b>${platformKey}</b> -> ${result_url} <br/><br/>`;
         }
-      }
+      }      
+      // @@@@ Create installation links - Section END @@@@
     </script>
   </body>
 </html>
