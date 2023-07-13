@@ -154,7 +154,7 @@
               <li>
                 <code>afParameters</code>: these are the same attribution
                 parameters we've collected to send with the impression in the
-                previous section.
+                previous section. The <code>af_xplatform</code> is removed since it is no longer required.
               </li>
               <li>
                 <code>platform</code>: The platform this link aims for, e.g.
@@ -302,6 +302,20 @@
             "https://apps.apple.com/us/app/onelink-simulator/id1550796743", // <--- redirect URL is irrelevant for iOS & Android
         },
       };
+      
+      
+      // @@@@@@ Remove "af_xplatform=true" custom parameter from the afParamaters
+      // Why? This code is reusing afParameters to create both impression link above the direct click URL below.
+      // The "af_xplatform=true" is relevant only to the imperssions link, but redundant and even confusing 
+      // in the direct click URL. This why the following code remove this parameter. 
+      
+      // Find index of custom parameter "af_xplatform=true" to remove from afCustom array
+      const indexToRemove = afParameters.afCustom.findIndex(item => item.paramKey === 'af_xplatform');
+      // Remove item from afCustom array at the found index
+      if (indexToRemove !== -1) {
+        afParameters.afCustom.splice(indexToRemove, 1);
+      }
+      // @@@ End of "af_xplatform=true" removal
 
       // iterating the platforms object
       for (const platformKey in platforms) {
