@@ -79,6 +79,12 @@
             alt="Xbox Microsoft store link"
           />
         </a>
+        <a id="nativepc_link" class="store-image" href="#" target="_blank">
+          <img
+            src="images/store_icons/nativepc.png"
+            alt="Native PC store link"
+          />
+        </a>
       </div>
       <div class="url-container">
         <div class="output_url-container">
@@ -154,7 +160,8 @@
               <li>
                 <code>afParameters</code>: these are the same attribution
                 parameters we've collected to send with the impression in the
-                previous section. The <code>af_xplatform</code> is removed since it is no longer required.
+                previous section. The <code>af_xplatform</code> is removed since
+                it is no longer required.
               </li>
               <li>
                 <code>platform</code>: The platform this link aims for, e.g.
@@ -264,6 +271,12 @@
           appid: "1234561", // <--- DON'T FORGET TO USE YOUR OWN appid
           redirectURL: "https://store.steampowered.com/app/1176160/Space_Wars/", // <--- DON'T FORGET TO USE YOUR OWN redirect URL (Encoded!)
         },
+        nativepc: {
+          platformName: "nativepc",
+          appid: "12341234", // <--- DON'T FORGET TO USE YOUR OWN appid
+          redirectURL:
+            "https://github.com/AppsFlyerSDK/appsflyer-unity-sample-app", // <--- DON'T FORGET TO USE YOUR OWN redirect URL (Encoded!)
+        },
         epic: {
           platformName: "epic",
           appid: "butterflyer", // <--- DON'T FORGET TO USE YOUR OWN appid
@@ -302,15 +315,16 @@
             "https://apps.apple.com/us/app/onelink-simulator/id1550796743", // <--- redirect URL is irrelevant for iOS & Android
         },
       };
-      
-      
+
       // @@@@@@ Remove "af_xplatform=true" custom parameter from the afParamaters
       // Why? This code is reusing afParameters to create both impression link above the direct click URL below.
-      // The "af_xplatform=true" is relevant only to the imperssions link, but redundant and even confusing 
-      // in the direct click URL. This why the following code remove this parameter. 
-      
+      // The "af_xplatform=true" is relevant only to the imperssions link, but redundant and even confusing
+      // in the direct click URL. This why the following code remove this parameter.
+
       // Find index of custom parameter "af_xplatform=true" to remove from afCustom array
-      const indexToRemove = afParameters.afCustom.findIndex(item => item.paramKey === 'af_xplatform');
+      const indexToRemove = afParameters.afCustom.findIndex(
+        (item) => item.paramKey === "af_xplatform"
+      );
       // Remove item from afCustom array at the found index
       if (indexToRemove !== -1) {
         afParameters.afCustom.splice(indexToRemove, 1);
