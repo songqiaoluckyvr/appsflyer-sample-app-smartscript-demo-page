@@ -1,5 +1,5 @@
 /**
- * AF Smart Script (Build 2.7.0)
+ * AF Smart Script (Build 2.7.1)
  */
 
  function _iterableToArrayLimit(arr, i) {
@@ -431,7 +431,7 @@ var isPlatformValid = function isPlatformValid(platform) {
     console.error("platform is missing , can't generate URL", platform);
     return false;
   }
-  var platforms = ['smartcast', 'tizen', 'roku', 'webos', 'vidaa', 'playstation', 'android', 'ios', 'steam', 'quest', 'battlenet', 'epic', 'switch', 'xbox'];
+  var platforms = ['smartcast', 'tizen', 'roku', 'webos', 'vidaa', 'playstation', 'android', 'ios', 'steam', 'quest', 'battlenet', 'epic', 'switch', 'xbox', 'nativepc'];
   if (!platforms.includes(platform.toLowerCase())) {
     console.error('platform need to be part of the known platforms supoorted');
     return false;
@@ -2166,7 +2166,7 @@ function QRCode() {
   }
 }
 
-var version = "2.7.0";
+var version = "2.7.1";
 
 var formatVersion = version.replace(/\./g, '_'); //replace . with _
 
