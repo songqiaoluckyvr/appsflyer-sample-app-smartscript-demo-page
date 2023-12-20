@@ -205,7 +205,7 @@ if (OL_result) {
       </div>
     </div>
     <!-- SCRIPTS -->
-    <script src="./scripts/onelink-smart-script-v2.7.1.js"></script>
+    <script src="https://onelinksmartscript.appsflyer.com/onelink-smart-script-latest.js"></script>
     <script>
       // @@@@ Section START - Fire an impression @@@@
 
@@ -243,6 +243,7 @@ if (OL_result) {
       var adset = { keys: ["adset_name"], defaultValue: "game_adset_name" };
       // extracting parameters for facebook click
       var afSub2 = { keys: ["fbclid"] };
+      var fbclid_out = {paramKey: "fbclid", keys: ["fbclid"]};
 
       var afParameters = {
         mediaSource: mediaSource,
@@ -254,6 +255,7 @@ if (OL_result) {
           // !!! IMPORTANT !!!
           // The following param is mandatory for cross-platform impression. MUST BE ADDED
           { paramKey: "af_xplatform", keys: [], defaultValue: "true" },
+          fbclid_out
         ],
       };
 
